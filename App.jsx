@@ -7,56 +7,42 @@ export default function App() {
   const [mobile, setmobile] = useState("");
   const [email, setemail] = useState("");
   const [message, setmessage] = useState("");
+  const [sendingMessage, setSendingMessage] = useState("");
 
   const EmailVal = (mail) => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     return (reg.test(mail))
   }
 
-  const sendEmail = () => {
-    emailjs.sendForm('service_zq6k8g7', 'template_i6vswhh', { name, email, mobile, message }, 'lNrL3V7dweavQ-afy')
-      .then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text);
-      });
+  const sendEmail = async () => {
+    // Alert.alert("message send successfully..")
+    try {
+      const apicall = await fetch(`https://contact-us-backend.vercel.app/`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        }, body: JSON.stringify({ html: `<h3><b>Reack native assignment by Arjun Kumar Soni</b></h3><h3>Name: ${name} </h3><h3>Mobile Number: ${mobile} </h3><h3>Eamil: ${email}</h3><h3>Message: ${message}</h3><h2><a href='https://arjunksoni.github.io/ArjunPortfolio/'>My Portfilio</a></2><h2><a href='https://github.com/ArjunKSoni'>Github</a></h2><h2><a href='https://www.linkedin.com/in/aksoni0520/'>Linkedin</a></h2>` }),
+      })
+      let data = await apicall.json()
+      Alert.alert("Message send successfully..")
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  // const transporter = nodemailer.createTransport({
-  //   host: 'smtp.gmail.com',
-  //   port: 587,
-  //   secure: false,
-  //   auth: {
-  //     user: "ArjunKSoni1234@gmail.com",
-  //     pass: "AKSoni@1234",
-  //   },
-  // });
-  // const options = {
-  //   from: "ArjunKSoni1234@gmail.com",
-  //   to: 'aksoni0520@gmail.com',
-  //   subject: "Assignment React Native by Arjun Kumar Soni",
-  //   message: `Name:- ${name}
-  //   Email:- ${email}
-  //   Mobile Number:- ${mobile}
-  //   Message:- ${message}`,
-  // };
 
   const pressed = () => {
     if (EmailVal(email.trim()) !== true) {
       Alert.alert("invalid Email")
     }
     else if (name.trim() === "") {
-      Alert.alert("Name is required")
+      Alert.alert("Name is required") 
     }
     else if (mobile.trim().length !== 10) {
       Alert.alert("invalid mobile number")
     }
     else {
       sendEmail();
-      // transporter.sendMail(options, (err) => {
-      //   if (err) Alert.alert(err)
-      //   else { Alert.alert("Message send successfully..") }
-      // });
       setname(""); setemail(""); setmessage(""); setmobile("")
     }
   }
@@ -77,7 +63,7 @@ export default function App() {
               className="w-4/5 mt-1 h-10 mb-5 text-lg font-bold border-b-green-600 text-white border-b-2 rounded px-5"
               autoCapitalize='none'
               value={name}
-              onChangeText={(e) => setname(e.trim())}
+              onChangeText={(e) => setname(e)}
               autoCorrect={false}
             />
             <TextInput
