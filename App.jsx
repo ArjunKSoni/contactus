@@ -17,7 +17,7 @@ export default function App() {
   const sendEmail = async () => {
     // Alert.alert("message send successfully..")
     try {
-      const apicall = await fetch(`https://contact-us-backend.vercel.app/`, {
+      const apicall = await fetch(`https://contact-us-backend.vercel.app`, {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"
